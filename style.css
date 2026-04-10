@@ -1,0 +1,329 @@
+:root {
+    --bg-dark: #0f1115;
+    --bg-panel: #1a1d24;
+    --bg-track: #242831;
+    --text-main: #e2e8f0;
+    --text-muted: #94a3b8;
+    --accent: #3b82f6;
+    --accent-hover: #2563eb;
+    --record-red: #ef4444;
+    --record-hover: #dc2626;
+    --waveform-col: #10b981;
+    --border: #334155;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 2rem;
+}
+
+.app-container {
+    width: 100%;
+    max-width: 1000px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+header {
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(90deg, #60a5fa, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.5rem;
+}
+
+header p {
+    color: var(--text-muted);
+    font-size: 1rem;
+}
+
+#tracks-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.track {
+    display: flex;
+    align-items: center;
+    background-color: var(--bg-track);
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 1px solid var(--border);
+    gap: 1rem;
+    height: 100px;
+}
+
+.track:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.track-controls-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 130px;
+    flex-shrink: 0;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.2s;
+}
+
+.checkbox-label:hover {
+    color: var(--text-main);
+}
+
+.checkbox-label input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.custom-checkbox {
+    width: 16px;
+    height: 16px;
+    background-color: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    margin-right: 8px;
+    position: relative;
+    transition: background-color 0.2s;
+}
+
+.checkbox-label input:checked ~ .custom-checkbox {
+    background-color: var(--accent);
+    border-color: var(--accent);
+}
+
+.checkbox-label input:checked ~ .custom-checkbox:after {
+    content: "";
+    position: absolute;
+    display: none;
+    left: 5px;
+    top: 2px;
+    width: 4px;
+    height: 8px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.checkbox-label input:checked ~ .custom-checkbox:after {
+    display: block;
+}
+
+.track-status {
+    margin-top: 0.25rem;
+}
+
+.record-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 4px; /* Default to square */
+    background-color: var(--bg-panel);
+    border: 2px solid var(--border); /* Greyed out border initially */
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.record-btn::after {
+    content: '';
+    width: 14px;
+    height: 14px;
+    background-color: var(--border); /* Greyed out inner square */
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.record-btn:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.record-btn.recording {
+    border-color: var(--record-red); /* Turn red */
+    border-radius: 50%; /* Circle for record */
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+    animation: pulse 1.5s infinite;
+}
+
+.record-btn.recording::after {
+    background-color: var(--record-red);
+    border-radius: 50%; /* Inner red circle */
+    width: 14px;
+    height: 14px;
+}
+
+.record-btn.has-audio {
+    border-color: var(--waveform-col); /* Green for playback */
+    border-radius: 50%; /* Keep circle for play button */
+}
+
+.record-btn.has-audio::after {
+    background-color: var(--waveform-col);
+    width: 0;
+    height: 0;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-left: 9px solid var(--waveform-col);
+    border-radius: 0;
+    margin-left: 3px;
+}
+
+.record-btn.has-audio.playing {
+    border-color: var(--waveform-col);
+    animation: none;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+}
+
+.record-btn.has-audio.playing::after {
+    border: none;
+    background-color: var(--waveform-col);
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    margin-left: 0;
+}
+
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+.waveform-container {
+    flex-grow: 1;
+    height: 100%;
+    background-color: var(--bg-panel);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+}
+
+.waveform {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.track-controls-right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.add-track-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--bg-panel);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.add-track-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    transform: scale(1.05);
+}
+
+.delete-track-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--bg-panel);
+    border: 1px solid var(--border);
+    color: var(--record-red);
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-left: 0.5rem;
+}
+
+.delete-track-btn:hover {
+    background-color: rgba(239, 68, 68, 0.1);
+    transform: scale(1.05);
+}
+
+.controls-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background-color: var(--bg-panel);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+}
+
+.export-btn {
+    background-color: var(--accent);
+    color: white;
+    border: none;
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s, opacity 0.2s;
+}
+
+.export-btn:hover:not(:disabled) {
+    background-color: var(--accent-hover);
+}
+
+.export-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+#export-status {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
